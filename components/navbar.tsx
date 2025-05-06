@@ -4,7 +4,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-gray-300 p-2 flex items-center">
       <img
-        src=""
+        src="/pp-dummy.png"
         alt="Profile"
         className="w-10 h-10 rounded-full mr-2"
       />
