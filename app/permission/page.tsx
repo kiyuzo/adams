@@ -21,7 +21,7 @@ const PermissionsPage = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push('/synchronize');
+    router.push('/login');
   };
 
   return (

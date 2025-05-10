@@ -21,11 +21,14 @@ export default function PointsPage() {
     ]
   };
 
+  // Updated rewards list
   const rewards = [
-    { title: "Discount Coupon", points: 200, description: "10% off your next purchase", image: "/pp-dummy.png" },
-    { title: "Premium Feature", points: 500, description: "Unlock advanced analytics", image: "/pp-dummy.png" },
-    { title: "Exclusive Badge", points: 300, description: "Show off your achievements", image: "/pp-dummy.png" },
-    { title: "Gift Card", points: 400, description: "Redeem a $10 gift card", image: "/pp-dummy.png" },
+    { title: "KN95 Bagus Mask (10 pcs)", points: 100, image: "/KN95.svg" },
+    { title: "Duckbill Sensi Mask (50 pcs)", points: 500, image: "/duckbill.svg" },
+    { title: "Aquviva (250 mL)", points: 50, image: "/aquviva.svg" },
+    { title: "Aquviva (1 L)", points: 50, image: "/aquviva.svg" },
+    { title: "Pertamax Cashback", points: 500, image: "/pertamina.svg" },
+    { title: "Cellular Data (1 GB)", points: 300, image: "/telkomsel.svg" },
   ];
 
   const getProgressClass = (progress: number) => {
@@ -40,7 +43,7 @@ export default function PointsPage() {
       <div className="flex items-center mb-8">
         <button
           className="mr-2 text-2xl text-white font-bold"
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/dashboard')}
           aria-label="Back"
         >
           &lt;
@@ -122,18 +125,19 @@ export default function PointsPage() {
           </>
         ) : (
           <section className="pt-4">
-            <h2 className="text-2xl font-semibold mb-6 text-white">Available Rewards</h2>
+            {/* Removed the Available Rewards title */}
             <div className="grid grid-cols-2 gap-4">
               {rewards.map((reward, index) => (
                 <div key={index} className="border border-gray-200 rounded-lg p-4 shadow-sm bg-[#D9D9D9] flex flex-col items-center">
                   <img src={reward.image} alt={reward.title} className="w-24 h-24 object-contain mb-4" />
-                  <h3 className="font-medium text-lg text-center text-black">{reward.title}</h3>
-                  <p className="text-sm text-gray-400 mt-2">Cost: <span className="font-bold">{reward.points} pts</span></p>
+                  <h3 className="font-semibold text-lg text-center text-black">{reward.title}</h3>
+                  <span className="text-black font-bold mt-2">{reward.points} pts</span>
                   <button
-                    className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                    className="mt-4"
+                    style={{ backgroundColor: '#8491A2', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', fontSize: '0.875rem' }}
                     onClick={() => router.push('/points/redeem')}
                   >
-                    Redeem
+                    Exchange Points
                   </button>
                 </div>
               ))}

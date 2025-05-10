@@ -2,9 +2,19 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+
+  // Logout handler
+  const handleLogout = () => {
+    // Clear any auth/session storage if needed
+    // localStorage.removeItem('token');
+    setMenuOpen(false);
+    router.push('/landing');
+  };
 
   return (
     <nav
@@ -39,11 +49,13 @@ const Navbar: React.FC = () => {
               />
             </svg>
           </Link>
-          <img
-            src="/pp-dummy.png"
-            alt="Profile"
-            className="h-9 w-9 rounded-full object-cover"
-          />
+          <Link href="/profile" className="text-white">
+            <img
+              src="/pp-dummy.webp"
+              alt="Profile"
+              className="h-9 w-9 rounded-full object-cover cursor-pointer"
+            />
+          </Link>
           {/* Hamburger Menu */}
           <button
             className="text-white focus:outline-none relative z-50 flex items-center h-9"
@@ -74,7 +86,7 @@ const Navbar: React.FC = () => {
       >
         <div className="flex flex-col gap-4 px-2">
           <Link
-            href="/"
+            href="/dashboard"
             className="flex items-center gap-3 text-white text-lg font-semibold hover:text-green-400 transition"
             onClick={() => setMenuOpen(false)}
           >
@@ -107,16 +119,27 @@ const Navbar: React.FC = () => {
             Points
           </Link>
           <Link
-            href="/logout"
+            href="/profile"
             className="flex items-center gap-3 text-white text-lg font-semibold hover:text-green-400 transition"
             onClick={() => setMenuOpen(false)}
+          >
+            {/* User Icon */}
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 20c0-2.21 3.582-4 6-4s6 1.79 6 4" />
+            </svg>
+            Profile
+          </Link>
+          <button
+            className="flex items-center gap-3 text-white text-lg font-semibold hover:text-green-400 transition text-left"
+            onClick={handleLogout}
           >
             {/* Logout Icon */}
             <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 01-2 2H7a2 2 0 01-2-2V7a2 2 0 012-2h4a2 2 0 012 2v1" />
             </svg>
             Logout
-          </Link>
+          </button>
         </div>
       </div>
     </nav>

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import Image from 'next/image';
 
 const SignUpPage = () => {
@@ -36,14 +35,17 @@ const SignUpPage = () => {
     setIsLoading(true);
 
     try {
-      // TODO: Uncomment and implement actual API call
-      /* 
-      const response = await fetch('http://127.0.0.1:3000/register', {
+      const response = await fetch('http://127.0.0.1:3001/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ 
+          email, 
+          password,
+          created_at: new Date().toISOString(),
+          role: 'user'
+        }),
       });
 
       const data = await response.json();
@@ -52,17 +54,9 @@ const SignUpPage = () => {
         throw new Error(data.message || 'Registration failed');
       }
 
-      // Redirect to login or dashboard after successful registration
-      router.push('/login');
-      */
-      
-      // Temporary simulation of successful registration
-      console.log('Registration payload:', { email, password });
-      setTimeout(() => {
-        router.push('/login');
-      }, 1500);
-      
-    } catch (err) {
+      router.push('/synchronize');
+
+    } catch (err: any) {
       setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -150,18 +144,14 @@ const SignUpPage = () => {
       </form>
       
       <div className="mt-6 text-center">
-        <button
-          className="flex items-center justify-center w-full max-w-sm py-2 px-4 bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition"
-        >
-          <Image 
-            src="/google-logo.svg" 
-            alt="Google Logo" 
-            width={20} 
-            height={20} 
-            className="mr-2"
-          />
-          Login with Google
-        </button>
+        <div className="mb-2 text-white font-medium">Login with</div>
+        <Image 
+          src="/google.svg" 
+          alt="Google Logo" 
+          width={40} 
+          height={40} 
+          className="mx-auto cursor-pointer"
+        />
       </div>
     </div>
   );

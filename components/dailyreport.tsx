@@ -1,10 +1,23 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+
+// Dynamically import Leaflet map to avoid SSR issues
+const Map = dynamic(() => import('./readonlymap'), { ssr: false });
 
 export default function DailyReport() {
   const router = useRouter();
   const dailyMessage = "Great job staying in green zones 80% of your time today, especially around Sleman. Try avoiding the Ring Road area tomorrow — it's been red all week";
+
+  // Example: get user's main point (replace with real user data)
+  const [mainPoint, setMainPoint] = useState<[number, number]>([-7.7828, 110.3671]); // Yogyakarta
+
+  useEffect(() => {
+    // You can fetch and set the user's main point here if needed
+    // setMainPoint([lat, lng]);
+  }, []);
 
   const handleClick = () => {
     router.push('/dailyreport');
@@ -35,8 +48,10 @@ export default function DailyReport() {
           
           <div className='mt-4'>
             <p className='text-[#F1F1F0] ml-8'>Path you took today</p>
-            <div className="mt-4 mx-2 p-3 bg-black rounded-lg w-[320px] h-[160px] flex items-center justify-center mx-auto">
-              {/* You can place a map or image here in the future */}
+            <div className="mt-4 mx-2 p-3 rounded-lg w-[320px] h-[160px] flex items-center justify-center mx-auto relative">
+              {/* Read-only Leaflet map */}
+              <div className="absolute inset-0 z-10 pointer-events-none rounded-lg" />
+              <Map center={mainPoint} />
             </div>
           </div>
         

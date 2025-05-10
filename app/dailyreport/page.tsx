@@ -1,5 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the interactive map component
+const Map = dynamic(() => import('@/components/readonlymap'), { ssr: false });
 
 export default function DailyReportPage() {
   const getEnglishDateIndonesia = () => {
@@ -14,11 +20,14 @@ export default function DailyReportPage() {
     return today.toLocaleDateString('en-US', options);
   };
 
+  // Example main point (Yogyakarta)
+  const mainPoint: [number, number] = [-7.7828, 110.3671];
+
   return (
     <div className="max-w-md mx-auto p-4 bg-[#14181D] min-h-screen">
       {/* Header with back button */}
       <div className="flex items-center mb-4">
-        <Link href="/" className="mr-2">
+        <Link href="/dashboard" className="mr-2">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             className="h-6 w-6 text-gray-200 hover:text-white" 
@@ -113,9 +122,9 @@ export default function DailyReportPage() {
       <div className="p-4 rounded-lg mt-4 mb-4">
         <h3 className="text-white font-semibold mb-3">Path you took today</h3>
         
-        {/* Map placeholder - replace with your actual map component */}
+        {/* Interactive Map */}
         <div className="bg-[#14181D] h-48 rounded-lg mb-3 flex items-center justify-center">
-          <span className="text-gray-400">[Map placeholder]</span>
+          <Map center={mainPoint} />
         </div>
         
         {/* Location text */}
@@ -135,7 +144,6 @@ export default function DailyReportPage() {
           <span className="text-white">Sleman</span>
         </div>
       </div>
-
 
       {/* Driver Feedback */}
       <div className="bg-[#495565] p-8 rounded-lg shadow mt-4 text-center">

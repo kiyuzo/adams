@@ -27,12 +27,12 @@ pingDatabase().then((isConnected) => {
 });
 let app = express();
 let controller = new Controller(db);
-// app.use(
-//   cors({
-//     origin: '*',
-//     credentials: true,
-//   })
-// );
+app.use(
+  cors({
+    origin: '*',
+    credentials: true,
+  })
+);
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing form data
 app.use(bodyParser.json());
 app.use(session({
@@ -55,6 +55,6 @@ app.get('/mission', controller.getMission);
 app.post('/auth/mission', controller.postMission);
 app.delete('/auth/mission', controller.deleteMission);
 // Use PORT from env or default to 3000
-const PORT = 3000;
+const PORT = 3001;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -25,9 +25,7 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      // TODO: Uncomment and implement actual API call
-      /* 
-      const response = await fetch('http://127.0.0.1:3000/login', {
+      const response = await fetch('http://127.0.0.1:3001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,15 +41,7 @@ const LoginPage = () => {
 
       // Redirect to dashboard after successful login
       router.push('/dashboard');
-      */
-      
-      // Temporary simulation of successful login
-      console.log('Login payload:', { email, password });
-      setTimeout(() => {
-        router.push('/dashboard');
-      }, 1500);
-      
-    } catch (err) {
+    } catch (err: any) {
       setError(err.message || 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
@@ -125,32 +115,21 @@ const LoginPage = () => {
       
       <div className="mt-6 text-center w-full max-w-sm">
         <div className="mb-4">
-          <Link href="/signup" className="text-blue-400 hover:text-blue-300 text-sm">
+          <Link href="/sign-up" className="text-blue-400 hover:text-blue-300 text-sm">
             Create account
           </Link>
-        </div>
+        </div>       
         
-        <div className="relative mb-4">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-600"></div>
-          </div>
-          <div className="relative flex justify-center">
-            <span className="px-2 bg-[#14181D] text-gray-400 text-sm">Or login with</span>
-          </div>
-        </div>
-        
-        <button
-          className="flex items-center justify-center w-full py-2 px-4 bg-white text-gray-800 border border-gray-300 rounded-md shadow-sm hover:bg-gray-100 transition"
-        >
+        <div className="mt-24 text-center">
+          <div className="mb-2 text-white font-medium">Login with</div>
           <Image 
-            src="/google-logo.svg" 
+            src="/google.svg" 
             alt="Google Logo" 
-            width={20} 
-            height={20} 
-            className="mr-2"
+            width={40} 
+            height={40} 
+            className="mx-auto cursor-pointer"
           />
-          Login with Google
-        </button>
+        </div>
       </div>
     </div>
   );

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const SynchronizePage = () => {
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
@@ -9,9 +10,9 @@ const SynchronizePage = () => {
   const router = useRouter();
 
   const companies = [
-    { id: 'gojek', name: 'Gojek' },
-    { id: 'grab', name: 'Grab' },
-    { id: 'maxim', name: 'Maxim' }
+    { id: 'gojek', logo: '/gojek-logo.svg', alt: 'Gojek Logo' },
+    { id: 'grab', logo: '/grab-logo.svg', alt: 'Grab Logo' },
+    { id: 'maxim', logo: '/maxim-logo.svg', alt: 'Maxim Logo' }
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -19,7 +20,7 @@ const SynchronizePage = () => {
     // Simulate successful synchronization
     console.log('Selected company:', selectedCompany);
     console.log('Driver ID:', driverId);
-    router.push('/dashboard'); // Redirect after selection
+    router.push('/permission');
   };
 
   return (
@@ -27,30 +28,26 @@ const SynchronizePage = () => {
       <h1 className="text-3xl font-bold text-center mb-2">Synchronize your account!</h1>
       
       <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-6">
-        {/* Grouped Companies */}
-        <div className="p-4 bg-[#1F252D] rounded-md space-y-3">
+        {/* Company Logos as Selectable List */}
+        {/* Company Logos as Selectable List */}
+        <div className="p-4 bg-[#1F252D] rounded-md flex flex-col gap-4">
           {companies.map((company) => (
-            <div 
+            <div
               key={company.id}
               onClick={() => setSelectedCompany(company.id)}
-              className={`p-4 bg-white text-gray-800 border rounded-md cursor-pointer transition-colors ${
-                selectedCompany === company.id 
-                  ? 'border-blue-500' 
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
+              className={`flex items-center justify-center w-full h-16 rounded-md cursor-pointer transition-all border-2
+                ${selectedCompany === company.id 
+                  ? 'border-blue-500 bg-white' 
+                  : 'border-gray-300 bg-gray-100 hover:border-blue-400'
+                }`}
             >
-              <div className="flex items-center">
-                <div className={`w-5 h-5 rounded-full border mr-3 flex items-center justify-center ${
-                  selectedCompany === company.id 
-                    ? 'border-blue-500 bg-blue-500' 
-                    : 'border-gray-400'
-                }`}>
-                  {selectedCompany === company.id && (
-                    <div className="w-2 h-2 rounded-full bg-white"></div>
-                  )}
-                </div>
-                <span className="font-medium">{company.name}</span>
-              </div>
+              <Image
+                src={company.logo}
+                alt={company.alt}
+                width={72}
+                height={72}
+                className="object-contain"
+              />
             </div>
           ))}
         </div>

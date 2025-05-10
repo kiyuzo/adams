@@ -1,6 +1,5 @@
 import { NavigationProvider } from '@/context/NavigationContext';
-import Footer from '@/components/footer';
-import Navbar from '@/components/navbar';
+import NavbarVisibility from '@/components/NavbarVisibility';
 import './globals.css';
 
 export default function RootLayout({
@@ -12,7 +11,8 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen flex flex-col bg-gray-50">
         <NavigationProvider>
-          <Navbar />
+          {/* Only show Navbar if not on /landing */}
+          <NavbarVisibility />
           <main className="flex-grow overflow-y-auto">
             {children}
           </main>

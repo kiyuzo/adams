@@ -31,7 +31,7 @@ export default function RedemptionSuccessPage() {
         </p>
         <button
           className="w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition"
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/dashboard')}
         >
           Go Back Home
         </button>
