@@ -15,13 +15,13 @@ export default function DailyReportPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div className="max-w-md mx-auto p-4 bg-[#14181D] min-h-screen">
       {/* Header with back button */}
       <div className="flex items-center mb-4">
         <Link href="/" className="mr-2">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
-            className="h-6 w-6 text-gray-600 hover:text-gray-800" 
+            className="h-6 w-6 text-gray-200 hover:text-white" 
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor"
@@ -34,83 +34,119 @@ export default function DailyReportPage() {
             />
           </svg>
         </Link>
-        <h1 className="text-2xl font-bold">Daily Report</h1>
+        <h1 className="text-2xl font-bold text-gray-100">Daily Report</h1>
       </div>
 
-      <h2 className="text-lg text-gray-600 mb-6">{getEnglishDateIndonesia()}</h2>
+      <h2 className="text-lg text-gray-300 mb-6">{getEnglishDateIndonesia()}</h2>
 
-    <div className="gap-4 mb-6 bg-[#D9D9D9] p-4 rounded-lg">
+      <div className="gap-4 mb-6 bg-[#232A34] p-4 rounded-lg">
         {/* Points and Mission */}
         <div className='flex justify-between items-center mb-4'>
           <div>
-              <div className="flex flex-col">
-                  <span className="text-4xl font-bold">
-                      112<span className="text-xl">pts</span>
-                  </span>
-                  <span className="font-bold text-md">
-                      collected
-                  </span>
-              </div>
-              <div className="flex">
-                  <span className="text-4xl font-bold">
-                      3
-                  </span>
-                  <span>
-                      <span className='flex flex-col text-md font-bold ml-2'>
-                          missions
-                      </span>
-                      <span className='flex flex-col text-md font-bold ml-2'>
-                          completed
-                      </span>
-                  </span>
-              </div>
+            <div className="flex flex-col mb-6">
+              <span className="text-4xl font-bold text-[#FB4706]">
+                112<span className="text-xl text-white">pts</span>
+              </span>
             </div>
-
-            <div>
-                <div className="space-y-2 mt-4">
-                    <div className="flex items-center">
-                        <span className="text-green-500 font-bold mr-2">+100 pts</span>
-                        <span>For staying in green zone for 50% of your work-time</span>
-                    </div>
-                    <div className="flex items-center">
-                        <span className="text-green-500 font-bold mr-2">+100 pts</span>
-                        <span>For staying in green zone for 50% of your work-time</span>
-                    </div>
-                    <div className="flex items-center">
-                        <span className="text-green-500 font-bold mr-2">+100 pts</span>
-                        <span>For staying in green zone for 50% of your work-time</span>
-                    </div>
-                </div>
+            <div className="flex flex-col items-start">
+              <span className="text-4xl font-bold text-white">3</span>
+              <span className="text-md font-bold text-gray-200 mt-1">missions completed</span>
             </div>
-        </div>
-    <div>
-
+          </div>
+          <div className="flex flex-col gap-2 mt-4 w-full max-w-xs">
+            {/* Mission List */}
+            <div className="flex items-center bg-[#495565] rounded-md px-3 py-2">
+              <span className="font-bold text-white mr-2">+100 pts</span>
+              <span className="text-white text-sm w-[160px]">For staying in green zone for 50% of your work-time</span>
+            </div>
+            <div className="flex items-center bg-[#495565] rounded-md px-3 py-2">
+              <span className="font-bold text-white mr-2">+100 pts</span>
+              <span className="text-white text-sm w-[160px]">For staying in green zone for 50% of your work-time</span>
+            </div>
+            <div className="flex items-center bg-[#495565] rounded-md px-3 py-2">
+              <span className="font-bold text-white mr-2">+100 pts</span>
+              <span className="text-white text-sm w-[160px]">For staying in green zone for 50% of your work-time</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Working Hours */}
-      <div className="flex bg-[#D9D9D9] p-4 rounded-lg mb-6">
-        <div>
-          <p className="text-3xl font-bold mb-1">12 hr</p>
-          <p className="text-gray-500 mb-3">Working hours</p>
-        </div>
-        <div className="space-y-2">
-          <p>5hr on the green zone</p>
-          <p>2hr on the yellow zone</p>
-          <p>1hr on the red zone</p>
+      {/* Working Hours - Side by Side with Original Colors */}
+      <div className="bg-[#232A34] p-4 rounded-lg mb-6">
+        <div className="flex">
+          {/* Total Hours - Left Side */}
+          <div className="w-1/2 pr-4 my-auto">
+            <p className="text-3xl font-bold text-white">12 hr</p>
+            <p className="text-gray-300">Working hours</p>
+          </div>
+          
+          {/* Zone Breakdown - Right Side */}
+          <div className="flex flex-col gap-2">
+            <div className="rounded-lg px-4 py-3 bg-[#FB4706] flex items-center">
+              <span className="text-white text-md font-bold w-12">5 hr</span>
+              <span className="text-white">on the red zone</span>
+            </div>
+            <div className="rounded-lg px-4 py-3 bg-[#F4EA03] flex items-center">
+              <span className="text-[#232A34] text-md font-bold w-12">2 hr</span>
+              <span className="text-[#232A34]">on the yellow zone</span>
+            </div>
+            <div className="rounded-lg px-4 py-3 bg-[#23CA58] flex items-center">
+              <span className="text-white text-md font-bold w-12">5 hr</span>
+              <span className="text-black">on the green zone</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="bg-[#F24822] p-4 rounded-lg shadow space-y-3">
+      {/* Air Quality Index */}
+      <p className='text-white mb-4 font-semibold'>Air Quality Index</p>
+      <div className="bg-[#F24822] p-4 rounded-lg shadow">
         <div className="flex items-center">
-          <span>Unhealthy for Sensitive Groups</span>
+          <div className="bg-[#B13505] rounded-lg flex items-center justify-center w-16 h-16 mr-4">
+            <span className="text-white text-2xl font-bold">127</span>
+          </div>
+          <span className="text-white text-xl font-semibold">Unhealthy for Sensitive Groups</span>
         </div>
       </div>
 
-      <div className="bg-white p-4 rounded-lg shadow mt-4">
-        <p className="text-gray-600">
+      {/* Path you took today */}
+      <div className="p-4 rounded-lg mt-4 mb-4">
+        <h3 className="text-white font-semibold mb-3">Path you took today</h3>
+        
+        {/* Map placeholder - replace with your actual map component */}
+        <div className="bg-[#14181D] h-48 rounded-lg mb-3 flex items-center justify-center">
+          <span className="text-gray-400">[Map placeholder]</span>
+        </div>
+        
+        {/* Location text */}
+        <div className="flex items-center">
+          <svg 
+            xmlns="http://www.w3.org/2000/svg" 
+            className="h-5 w-5 text-blue-400 mr-2" 
+            viewBox="0 0 20 20" 
+            fill="currentColor"
+          >
+            <path 
+              fillRule="evenodd" 
+              d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" 
+              clipRule="evenodd" 
+            />
+          </svg>
+          <span className="text-white">Sleman</span>
+        </div>
+      </div>
+
+
+      {/* Driver Feedback */}
+      <div className="bg-[#495565] p-8 rounded-lg shadow mt-4 text-center">
+        <h1 className="text-white font-bold mb-3">Driver Feedback</h1>
+        <p className="text-white">
           Great job staying in green zones 80% of your time today, especially around Sleman. 
           Try avoiding the Ring Road area tomorrow – it's been red all week.
+        </p>
+        <hr className="my-4 border-gray-300 opacity-0" />
+        <p className="text-white">
+          Today you lost 15 minutes more because you were in a red zone. If you avoid it, you can add 2 more trips.
         </p>
       </div>
     </div>
