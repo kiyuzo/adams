@@ -85,7 +85,7 @@ const Navbar: React.FC = () => {
             Dashboard
           </Link>
           <Link
-            href="/airquality"
+            href="/air-quality"
             className="flex items-center gap-3 text-white text-lg font-semibold hover:text-green-400 transition"
             onClick={() => setMenuOpen(false)}
           >

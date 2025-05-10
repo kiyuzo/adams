@@ -13,10 +13,9 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-gray-50">
         <NavigationProvider>
           <Navbar />
-          <main className="flex-grow pb-16 overflow-y-auto">
+          <main className="flex-grow overflow-y-auto">
             {children}
           </main>
-          <Footer />
         </NavigationProvider>
       </body>
     </html>
