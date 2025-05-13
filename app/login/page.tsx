@@ -4,14 +4,16 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -47,6 +49,36 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
+  const googleSignIn = async () => {
+    var token, user, email, uid;
+    try{
+      var result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result); 
+      if(!credential){
+        throw new Error('No credential found');
+      }   
+      token = credential.accessToken;
+      user = result.user;
+      email = user.email;
+      uid = user.uid;
+    } catch(error:any){
+      console.error(`error code = ${error.code} error = ${error.message}`);
+      setError('Google Sign-In failed. Please try again.');
+    }
+
+    try{
+      const response = await fetch('http://127.0.0.1:3001/google-signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({token, email, uid}),
+      })
+    } catch(error:any){
+      console.error(`error code = ${error.code} error = ${error.message}`);
+      setError('Google Sign-In failed. Please try again.');
+    }
+  }
 
   const isFormValid = email && password;
 
@@ -120,7 +152,7 @@ const LoginPage = () => {
           </Link>
         </div>       
         
-        <div className="mt-24 text-center">
+        <div className="mt-24 text-center" onClick={googleSignIn} >
           <div className="mb-2 text-white font-medium">Login with</div>
           <Image 
             src="/google.svg" 

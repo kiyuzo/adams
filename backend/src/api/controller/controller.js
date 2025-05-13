@@ -175,6 +175,30 @@ export class Controller {
                 });
             }
         });
+        this.postUserMissionProgress = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { mission_id, quantity } = req.body;
+                if (!req.session.user_id) {
+                    res.status(400).json({ message: 'unauthenticated' });
+                    return;
+                }
+                const user_id = req.session.user_id;
+                yield this.service.postUserMissionProgress(user_id, mission_id, quantity);
+                res.status(201).json({
+                    message: 'User mission progress recorded successfully',
+                    user_id,
+                    mission_id,
+                    quantity
+                });
+            }
+            catch (error) {
+                console.error('Error recording user mission progress:', error);
+                res.status(500).json({
+                    error: 'Failed to record user mission progress',
+                    details: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+        });
         this.service = new Service(db);
     }
 }
