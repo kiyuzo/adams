@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import AuthGuard from '@/components/AuthGuard';
 
 const NotificationsPage = () => {
   const notifications = {
@@ -56,39 +57,41 @@ const NotificationsPage = () => {
   };
 
   return (
-    <div className="bg-[#14181D] text-white min-h-screen p-4">
-      <h1 className="text-2xl font-bold mb-6">Notification</h1>
-      
-      <h2 className="text-xl font-semibold mb-4">Today</h2>
-      <div className="space-y-0 mb-8">
-        {notifications.today.map((notification, index) => (
-          <div key={notification.id}>
-            <div className="py-3">
-              <p>{notification.message}</p>
-              <p className="text-gray-400 text-sm mt-1">{notification.time}</p>
+    <AuthGuard>
+      <div className="bg-[#14181D] text-white min-h-screen p-4">
+        <h1 className="text-2xl font-bold mb-6">Notification</h1>
+        
+        <h2 className="text-xl font-semibold mb-4">Today</h2>
+        <div className="space-y-0 mb-8">
+          {notifications.today.map((notification, index) => (
+            <div key={notification.id}>
+              <div className="py-3">
+                <p>{notification.message}</p>
+                <p className="text-gray-400 text-sm mt-1">{notification.time}</p>
+              </div>
+              {index !== notifications.today.length - 1 && (
+                <hr className="border-gray-700 my-2" />
+              )}
             </div>
-            {index !== notifications.today.length - 1 && (
-              <hr className="border-gray-700 my-2" />
-            )}
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <h2 className="text-xl font-semibold mb-4">This Week</h2>
-      <div className="space-y-0">
-        {notifications.thisWeek.map((notification, index) => (
-          <div key={notification.id}>
-            <div className="py-3">
-              <p>{notification.message}</p>
-              <p className="text-gray-400 text-sm mt-1">{notification.time}</p>
+        <h2 className="text-xl font-semibold mb-4">This Week</h2>
+        <div className="space-y-0">
+          {notifications.thisWeek.map((notification, index) => (
+            <div key={notification.id}>
+              <div className="py-3">
+                <p>{notification.message}</p>
+                <p className="text-gray-400 text-sm mt-1">{notification.time}</p>
+              </div>
+              {index !== notifications.thisWeek.length - 1 && (
+                <hr className="border-gray-700 my-2" />
+              )}
             </div>
-            {index !== notifications.thisWeek.length - 1 && (
-              <hr className="border-gray-700 my-2" />
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 };
 

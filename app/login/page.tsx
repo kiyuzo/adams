@@ -39,6 +39,9 @@ const LoginPage = () => {
         throw new Error(data.message || 'Login failed');
       }
 
+      // Store login state after successful login
+      localStorage.setItem('isLoggedIn', 'true');
+
       // Redirect to dashboard after successful login
       router.push('/dashboard');
     } catch (err: any) {

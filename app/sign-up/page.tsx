@@ -54,6 +54,9 @@ const SignUpPage = () => {
         throw new Error(data.message || 'Registration failed');
       }
 
+      // Set login state after successful registration
+      localStorage.setItem('isLoggedIn', 'true');
+
       router.push('/synchronize');
 
     } catch (err: any) {

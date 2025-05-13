@@ -42,13 +42,13 @@ export class Service {
     return enumerator / denominator;
 };
 calculateMap = async () => {
-  let start: [number, number] = [10, 10];
-  let finish: [number, number] = [20, 20];
+  let start: [number, number] = [-7.920114, 110.022557];
+  let finish: [number, number] = [-7.795537, 110.850264];  
   let step_x: number = 0.5;
   let step_y: number = 0.5;
   let data = await this.getScannerData();
   let results: Array<{ pollution: number, coordinate: [number, number] }> = [];
-
+ 
   for (let x = start[0]; x <= finish[0]; x += step_x) {
     for (let y = start[1]; y <= finish[1]; y += step_y) {
       results.push({
