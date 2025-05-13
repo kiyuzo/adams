@@ -199,6 +199,19 @@ export class Controller {
                 });
             }
         });
+        this.postGoogleSignIn = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                var { token, email, uid } = req.body;
+            }
+            catch (error) {
+                console.error(error);
+                res.status(500).json({ error: error.message });
+            }
+            if (uid != null) {
+                req.session.user_id = uid;
+            }
+            res.status(201).json({ message: 'User signed in successfully' });
+        });
         this.service = new Service(db);
     }
 }

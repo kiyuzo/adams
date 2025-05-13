@@ -55,7 +55,7 @@ app.get('/mission', controller.getMission);
 app.post('/auth/mission', controller.postMission);
 app.delete('/auth/mission', controller.deleteMission);
 app.post("mission/progress", controller.postUserMissionProgress);
-app.post('/google-signin', controller.postGoogleSignin);
+app.post('/google-signin', controller.postGoogleSignIn);
 // Use PORT from env or default to 3000
 const PORT = 3001;
 
