@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { scannerDataTable, pollutionExposureTable, DataInterpretationTable, MissionTable, UserMissionTable } from '../../db/schema.js';
-import { sql, and, eq, or, isNull } from "drizzle-orm";
+import { sql, and, eq, isNull, or } from "drizzle-orm";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -159,6 +159,21 @@ export class Repository {
                     .values({
                     mission: mission,
                     points: points
+                });
+            }
+            catch (error) {
+                console.error(error);
+                throw error;
+            }
+        });
+        this.postUserMissionProgress = (user_id, mission_id, quantity) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.db
+                    .insert(UserMissionTable)
+                    .values({
+                    user_id: user_id,
+                    mission_id: mission_id,
+                    quantity: quantity
                 });
             }
             catch (error) {

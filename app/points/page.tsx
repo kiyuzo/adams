@@ -1,25 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useNavigation } from '@/context/NavigationContext';
+import AuthGuard from '@/components/AuthGuard';
 
 export default function PointsPage() {
   const { activeTab } = useNavigation();
   const [activeView, setActiveView] = useState('missions');
+  const [missions, setMissions] = useState<{ completed: any[]; uncompleted: any[] }>({ completed: [], uncompleted: [] });
+  const [missionsLoading, setMissionsLoading] = useState(true);
+  const [missionsError, setMissionsError] = useState('');
   const router = useRouter();
-
-  const missions = {
-    completed: [
-      { title: "Be in green zone for 50% of your work-time", points: 100, progress: 100 },
-      { title: "Pass through 15 green zones", points: 150, progress: 100 },
-      { title: "Pass through 15 green zones", points: 150, progress: 100 },
-    ],
-    uncompleted: [
-      { title: "Be in green zone for 50% of your work-time", points: 100, progress: 50 },
-      { title: "Pass through 15 green zones", points: 150, progress: 0 },
-    ]
-  };
 
   // Updated rewards list
   const rewards = [
@@ -37,114 +29,153 @@ export default function PointsPage() {
     return 'bg-yellow-400';
   };
 
-  return (
-    <div className="p-4 min-h-screen" style={{ backgroundColor: '#14181D' }}>
-      {/* Top bar with back arrow and Points title */}
-      <div className="flex items-center mb-8">
-        <button
-          className="mr-2 text-2xl text-white font-bold"
-          onClick={() => router.push('/dashboard')}
-          aria-label="Back"
-        >
-          &lt;
-        </button>
-        <h1 className="text-xl font-bold text-white">Points</h1>
-      </div>
+  // Fetch missions from backend
+  useEffect(() => {
+    setMissionsLoading(true);
+    fetch('http://127.0.0.1:3001/missions')
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to fetch missions');
+        return res.json();
+      })
+      .then(data => {
+        // Expecting backend to return { completed: [...], uncompleted: [...] }
+        setMissions({
+          completed: data.completed || [],
+          uncompleted: data.uncompleted || [],
+        });
+        setMissionsError('');
+      })
+      .catch(() => {
+        setMissionsError('Could not load missions.');
+        setMissions({ completed: [], uncompleted: [] });
+      })
+      .finally(() => setMissionsLoading(false));
+  }, []);
 
-      {/* Points value */}
-      <div className="flex justify-center mb-8">
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-bold text-white leading-none">82</span>
-          <span className="text-lg text-white leading-none">pts</span>
+  return (
+    <AuthGuard>
+      <div className="p-4 min-h-screen" style={{ backgroundColor: '#14181D' }}>
+        {/* Top bar with back arrow and Points title */}
+        <div className="flex items-center mb-8">
+          <button
+            className="mr-2 text-2xl text-white font-bold"
+            onClick={() => router.push('/dashboard')}
+            aria-label="Back"
+          >
+            &lt;
+          </button>
+          <h1 className="text-xl font-bold text-white">Points</h1>
+        </div>
+
+        {/* Points value */}
+        <div className="flex justify-center mb-8">
+          <div className="flex flex-col items-center">
+            <span className="text-4xl font-bold text-white leading-none">82</span>
+            <span className="text-lg text-white leading-none">pts</span>
+          </div>
+        </div>
+        
+        {/* Tab Navigation with active tab color #1F252D */}
+        <div className="flex">
+          <button
+            className={`flex-1 py-3 px-4 font-medium text-center rounded-t-lg ${
+              activeView === 'missions' 
+                ? 'bg-[#1F252D] text-white' 
+                : 'text-gray-500 bg-[#14181D]'
+            }`}
+            onClick={() => setActiveView('missions')}
+          >
+            Missions
+          </button>
+          <button
+            className={`flex-1 py-3 px-4 font-medium text-center rounded-t-lg ${
+              activeView === 'rewards' 
+                ? 'bg-[#1F252D] text-white' 
+                : 'text-gray-500 bg-[#14181D]'
+            }`}
+            onClick={() => setActiveView('rewards')}
+          >
+            Rewards
+          </button>
+        </div>
+        
+        {/* Content area - make background transparent to connect with tab */}
+        <div className="-mx-4 px-4 pb-4 bg-[#1F252D]">
+          {activeView === 'missions' ? (
+            missionsLoading ? (
+              <div className="text-gray-400 pt-8">Loading missions...</div>
+            ) : missionsError ? (
+              <div className="text-red-400 pt-8">{missionsError}</div>
+            ) : (
+              <>
+                {missions.completed.length === 0 && missions.uncompleted.length === 0 ? (
+                  <div className="text-center text-gray-400 pt-8">
+                    You don't have any missions today.
+                  </div>
+                ) : (
+                  <>
+                    <section>
+                      <h2 className="text-2xl font-semibold mb-4 pt-4 text-white">Completed Missions</h2>
+                      <ul className="space-y-4 list-none">
+                        {missions.completed.map((mission, index) => (
+                          <li key={`completed-${index}`} className="flex items-center bg-[#D9D9D9] rounded-lg p-4 shadow-sm">
+                            <div
+                              className={`w-4 h-4 rounded-full mr-4 ${getProgressClass(mission.progress)}`}
+                              title={`Progress: ${mission.progress}%`}
+                            ></div>
+                            <div className="flex justify-between items-center w-full">
+                              <p className="text-lg text-black">{mission.title}</p>
+                              <span className="font-medium text-black">{mission.points} pts</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+
+                    <section className="pt-6">
+                      <h2 className="text-2xl font-semibold mb-4 text-white">Uncompleted Missions</h2>
+                      <ul className="space-y-4 list-none">
+                        {missions.uncompleted.map((mission, index) => (
+                          <li key={`uncompleted-${index}`} className="flex items-center bg-[#D9D9D9] rounded-lg p-4 shadow-sm">
+                            <div
+                              className={`w-4 h-4 rounded-full mr-4 ${getProgressClass(mission.progress)}`}
+                              title={`Progress: ${mission.progress}%`}
+                            ></div>
+                            <div className="flex justify-between items-center w-full">
+                              <p className="text-lg text-black">{mission.title}</p>
+                              <span className="font-medium text-black">{mission.points} pts</span>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </section>
+                  </>
+                )}
+              </>
+            )
+          ) : (
+            <section className="pt-4">
+              {/* Removed the Available Rewards title */}
+              <div className="grid grid-cols-2 gap-4">
+                {rewards.map((reward, index) => (
+                  <div key={index} className="border border-gray-200 rounded-lg p-4 shadow-sm bg-[#D9D9D9] flex flex-col items-center">
+                    <img src={reward.image} alt={reward.title} className="w-24 h-24 object-contain mb-4" />
+                    <h3 className="font-semibold text-lg text-center text-black">{reward.title}</h3>
+                    <span className="text-black font-bold mt-2">{reward.points} pts</span>
+                    <button
+                      className="mt-4"
+                      style={{ backgroundColor: '#8491A2', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', fontSize: '0.875rem' }}
+                      onClick={() => router.push('/points/redeem')}
+                    >
+                      Exchange Points
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </div>
-      
-      {/* Tab Navigation with active tab color #1F252D */}
-      <div className="flex">
-        <button
-          className={`flex-1 py-3 px-4 font-medium text-center rounded-t-lg ${
-            activeView === 'missions' 
-              ? 'bg-[#1F252D] text-white' 
-              : 'text-gray-500 bg-[#14181D]'
-          }`}
-          onClick={() => setActiveView('missions')}
-        >
-          Missions
-        </button>
-        <button
-          className={`flex-1 py-3 px-4 font-medium text-center rounded-t-lg ${
-            activeView === 'rewards' 
-              ? 'bg-[#1F252D] text-white' 
-              : 'text-gray-500 bg-[#14181D]'
-          }`}
-          onClick={() => setActiveView('rewards')}
-        >
-          Rewards
-        </button>
-      </div>
-      
-      {/* Content area - make background transparent to connect with tab */}
-      <div className="-mx-4 px-4 pb-4 bg-[#1F252D]">
-        {activeView === 'missions' ? (
-          <>
-            <section>
-              <h2 className="text-2xl font-semibold mb-4 pt-4 text-white">Completed Missions</h2>
-              <ul className="space-y-4 list-none">
-                {missions.completed.map((mission, index) => (
-                  <li key={`completed-${index}`} className="flex items-center bg-[#D9D9D9] rounded-lg p-4 shadow-sm">
-                    <div
-                      className={`w-4 h-4 rounded-full mr-4 ${getProgressClass(mission.progress)}`}
-                      title={`Progress: ${mission.progress}%`}
-                    ></div>
-                    <div className="flex justify-between items-center w-full">
-                      <p className="text-lg text-black">{mission.title}</p>
-                      <span className="font-medium text-black">{mission.points} pts</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="pt-6">
-              <h2 className="text-2xl font-semibold mb-4 text-white">Uncompleted Missions</h2>
-              <ul className="space-y-4 list-none">
-                {missions.uncompleted.map((mission, index) => (
-                  <li key={`uncompleted-${index}`} className="flex items-center bg-[#D9D9D9] rounded-lg p-4 shadow-sm">
-                    <div
-                      className={`w-4 h-4 rounded-full mr-4 ${getProgressClass(mission.progress)}`}
-                      title={`Progress: ${mission.progress}%`}
-                    ></div>
-                    <div className="flex justify-between items-center w-full">
-                      <p className="text-lg text-black">{mission.title}</p>
-                      <span className="font-medium text-black">{mission.points} pts</span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </>
-        ) : (
-          <section className="pt-4">
-            {/* Removed the Available Rewards title */}
-            <div className="grid grid-cols-2 gap-4">
-              {rewards.map((reward, index) => (
-                <div key={index} className="border border-gray-200 rounded-lg p-4 shadow-sm bg-[#D9D9D9] flex flex-col items-center">
-                  <img src={reward.image} alt={reward.title} className="w-24 h-24 object-contain mb-4" />
-                  <h3 className="font-semibold text-lg text-center text-black">{reward.title}</h3>
-                  <span className="text-black font-bold mt-2">{reward.points} pts</span>
-                  <button
-                    className="mt-4"
-                    style={{ backgroundColor: '#8491A2', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', fontSize: '0.875rem' }}
-                    onClick={() => router.push('/points/redeem')}
-                  >
-                    Exchange Points
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-      </div>
-    </div>
+    </AuthGuard>
   );
 }

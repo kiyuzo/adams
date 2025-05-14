@@ -29,7 +29,7 @@ let app = express();
 let controller = new Controller(db);
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localhost:3000',
     credentials: true,
   })
 );
@@ -55,6 +55,8 @@ app.get('/mission', controller.getMission);
 app.post('/auth/mission', controller.postMission);
 app.delete('/auth/mission', controller.deleteMission);
 app.post('/logout', controller.postLogout);
+app.post("/mission/progress", controller.postUserMissionProgress);
+app.post('/google-signin', controller.postGoogleSignIn);
 // Use PORT from env or default to 3000
 const PORT = 3001;
 

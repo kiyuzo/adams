@@ -174,6 +174,42 @@ export class Controller {
       });
     }
   }
+  postUserMissionProgress = async (req: Request, res: Response) => {
+    try {
+      const { mission_id, quantity } = req.body;
+      if(!req.session.user_id){
+        res.status(400).json({message:'unauthenticated'})
+        return;
+      }
+      const user_id = req.session.user_id;
+      await this.service.postUserMissionProgress(user_id, mission_id, quantity);
+      
+      res.status(201).json({ 
+        message: 'User mission progress recorded successfully',
+        user_id,
+        mission_id,
+        quantity
+      });
+    } catch (error) {
+      console.error('Error recording user mission progress:', error);
+      res.status(500).json({ 
+        error: 'Failed to record user mission progress',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  }
+  postGoogleSignIn = async (req: Request, res: Response) => {
+    try {
+      var { token, email, uid } = req.body;
+    } catch (error:any) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
+    if (uid != null) {
+      req.session.user_id = uid;
+    }
+    res.status(201).json({ message: 'User signed in successfully' });
+  }
   postLogout = async (req: Request, res: Response) => {
     req.session.user_id = null;
   }
