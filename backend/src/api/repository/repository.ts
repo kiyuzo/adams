@@ -2,7 +2,7 @@ import { NeonQueryFunction } from "@neondatabase/serverless";
 import { NeonHttpDatabase } from "drizzle-orm/neon-http";
 import { scannerDataTable, pollutionExposureTable, DataInterpretationTable, MissionTable, UserMissionTable} from '../../db/schema.js'
 import { NeonDbError } from "@neondatabase/serverless";
-import { sql, and, eq } from "drizzle-orm";
+import { sql, and, eq, or, isNull } from "drizzle-orm";
 import { timestamp } from "drizzle-orm/gel-core";
 import { GoogleGenAI } from "@google/genai";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
