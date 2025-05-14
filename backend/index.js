@@ -6,9 +6,9 @@ import cors from 'cors';
 import bodyParser from "body-parser";
 import { neon } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { pollutionExposureTable } from "./src/db/schema.js";
 const sql = neon(process.env.DATABASE_URI);
-const db = drizzle({ client: sql });export const pingDatabase = async () => {
+const db = drizzle({ client: sql });
+export const pingDatabase = async () => {
   try {
     // Execute a simple query (SELECT 1 is commonly used for health checks)
     const result = await db.select();
@@ -39,8 +39,13 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false,
-  // cookie: { secure: true } //secure:true is only for HTTPS. Future work!.
-}))
+  cookie: { 
+    secure: false,       // Allow HTTP in dev
+    sameSite: 'lax',     // Use 'none' if using HTTPS
+    domain: 'localhost', // 👈 Critical for cross-port cookies
+    maxAge: 24 * 60 * 60 * 1000 // Optional: set expiry
+  }
+}));
 
 // Routes
 app.post('/register', controller.postRegister);

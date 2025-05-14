@@ -32,7 +32,9 @@ export default function PointsPage() {
   // Fetch missions from backend (fixed to /mission)
   useEffect(() => {
     setMissionsLoading(true);
-    fetch('http://127.0.0.1:3001/mission')
+    fetch('http://localhost:3001/mission',
+      {method:'GET', credentials:'include'}
+    )
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch missions');
         return res.json();
