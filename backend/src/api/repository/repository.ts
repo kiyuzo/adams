@@ -2,7 +2,7 @@ import { NeonQueryFunction } from "@neondatabase/serverless";
 import { NeonHttpDatabase } from "drizzle-orm/neon-http";
 import { scannerDataTable, pollutionExposureTable, DataInterpretationTable, MissionTable, UserMissionTable} from '../../db/schema.js'
 import { NeonDbError } from "@neondatabase/serverless";
-import { sql, and, eq, InferModel } from "drizzle-orm";
+import { sql, and, eq, InferModel, isNull, or } from "drizzle-orm";
 import { timestamp } from "drizzle-orm/gel-core";
 import { GoogleGenAI } from "@google/genai";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
@@ -176,7 +176,10 @@ export class Repository{
                     .where(
                         and(
                             eq(MissionTable.isDeleted, false),
-                            eq(UserMissionTable.user_id, user_id)
+                            or(
+                                eq(UserMissionTable.user_id, user_id),
+                                isNull(UserMissionTable.user_id)
+                            )
                         )
                     );
         } catch (error){
@@ -193,6 +196,20 @@ export class Repository{
                 points: points
             })
         } catch (error){
+            console.error(error)
+            throw error;
+        }
+    }
+    postUserMissionProgress = async (user_id:string, mission_id:number, quantity:number)=>{
+        try{
+            await this.db
+            .insert(UserMissionTable)
+            .values({
+                user_id: user_id,
+                mission_id: mission_id,
+                quantity: quantity
+            })
+        } catch(error){
             console.error(error)
             throw error;
         }
