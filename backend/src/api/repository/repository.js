@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { scannerDataTable, pollutionExposureTable, DataInterpretationTable, MissionTable, UserMissionTable } from '../../db/schema.js';
-import { sql, and, eq, isNull, or } from "drizzle-orm";
+import { sql, and, eq, or, isNull } from "drizzle-orm";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use

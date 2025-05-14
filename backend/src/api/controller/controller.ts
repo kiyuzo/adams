@@ -210,4 +210,7 @@ export class Controller {
     }
     res.status(201).json({ message: 'User signed in successfully' });
   }
+  postLogout = async (req: Request, res: Response) => {
+    req.session.user_id = null;
+  }
 }

@@ -212,6 +212,9 @@ export class Controller {
             }
             res.status(201).json({ message: 'User signed in successfully' });
         });
+        this.postLogout = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            req.session.user_id = null;
+        });
         this.service = new Service(db);
     }
 }
