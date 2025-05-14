@@ -44,7 +44,7 @@ export class Service {
                         pollution: this.IDWInterpolation([x, y], data),
                         coordinate: [x, y]
                     });
-                    console.log(`x = ${x}, y = ${y}`);
+                    // console.log(`x = ${x}, y = ${y}`)
                 }
             }
             if (results.length === 0) {

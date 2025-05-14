@@ -55,7 +55,7 @@ calculateMap = async () => {
         pollution: this.IDWInterpolation([x, y], data),
         coordinate: [x, y] as [number, number]
       });
-      console.log(`x = ${x}, y = ${y}`)
+      // console.log(`x = ${x}, y = ${y}`)
     }
   }
 
