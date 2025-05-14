@@ -11,9 +11,10 @@ export default function DailyReport() {
   const [mainPoint, setMainPoint] = useState<[number, number]>([-7.7828, 110.3671]); // Yogyakarta
   const [dailyMessage, setDailyMessage] = useState('Loading your daily message...');
 
-  useEffect(() => {
-    // Fetch the Gemini explanation for the current user
-    fetch('http://127.0.0.1:3001/gemini-explanation')
+useEffect(() => {
+    fetch('http://localhost:3001/gemini-explanation', {
+      credentials: 'include',
+    })
       .then(res => res.ok ? res.text() : Promise.reject('Failed to fetch'))
       .then(text => setDailyMessage(text))
       .catch(() => setDailyMessage('Could not load your daily message.'));

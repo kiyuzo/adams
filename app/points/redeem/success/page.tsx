@@ -25,8 +25,14 @@ export default function RedemptionSuccessPage() {
         {/* QR Code Section */}
         <div className="p-6 rounded-lg text-center mb-8">
           <div className="mx-auto w-48 h-48 bg-gray-100 flex items-center justify-center mb-4">
-            {/* QR Code Placeholder - Replace with actual QR code */}
-            <p className="text-gray-500 text-sm">[QR Code Image]</p>
+            {/* QR Code Image */}
+            <Image
+              src="/qr-dummy.svg"
+              alt="QR Code"
+              width={192}
+              height={192}
+              className="object-contain"
+            />
           </div>
           <p className="text-sm text-white mb-6">
             Visit your nearest Indomaret & show code to cashier to redeem your reward!

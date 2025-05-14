@@ -81,7 +81,7 @@ export default function PointsPage() {
           <button
             className={`flex-1 py-3 px-4 font-medium text-center rounded-t-lg ${
               activeView === 'missions' 
-                ? 'bg-[#1F252D] text-white' 
+                ? 'bg-[#1F252D] text-[#2A68F7]' 
                 : 'text-gray-500 bg-[#14181D]'
             }`}
             onClick={() => setActiveView('missions')}
@@ -91,7 +91,7 @@ export default function PointsPage() {
           <button
             className={`flex-1 py-3 px-4 font-medium text-center rounded-t-lg ${
               activeView === 'rewards' 
-                ? 'bg-[#1F252D] text-white' 
+                ? 'bg-[#1F252D] text-[#2A68F7]' 
                 : 'text-gray-500 bg-[#14181D]'
             }`}
             onClick={() => setActiveView('rewards')}
