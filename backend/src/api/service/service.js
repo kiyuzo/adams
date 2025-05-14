@@ -35,7 +35,7 @@ export class Service {
             let start = [-7.920114, 110.022557];
             let finish = [-7.795537, 110.850264];
             let step_x = (0.124577) / 30;
-            let step_y = (0.827707) / 30;
+            let step_y = (0.124577) / 30;
             let data = yield this.getScannerData();
             let results = [];
             for (let x = start[0]; x <= finish[0]; x += step_x) {

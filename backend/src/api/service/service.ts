@@ -45,7 +45,7 @@ calculateMap = async () => {
   let start: [number, number] = [-7.920114, 110.022557];
   let finish: [number, number] = [-7.795537, 110.850264];  
   let step_x: number = (0.124577)/30;
-  let step_y: number = (0.827707)/30;
+  let step_y: number = (0.124577)/30;
   let data = await this.getScannerData();
   let results: Array<{ pollution: number, coordinate: [number, number] }> = [];
  
