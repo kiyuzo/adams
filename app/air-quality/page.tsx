@@ -3,14 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { GoogleMap, useJsApiLoader, HeatmapLayerF } from '@react-google-maps/api';
-import AuthGuard from '@/components/AuthGuard'; // <-- Add this import
-
-const heatmapData = [
-  { lat: -7.7828, lng: 110.3671, weight: 3 },
-  { lat: -7.8012, lng: 110.3647, weight: 2 },
-  { lat: -7.7833, lng: 110.4311, weight: 4 },
-  { lat: -7.7700, lng: 110.3770, weight: 1 },
-];
+import AuthGuard from '@/components/AuthGuard';
 
 const mapContainerStyle = {
   width: '100%',
@@ -22,12 +15,26 @@ export default function AirQualityPage() {
   const router = useRouter();
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const [heatmapData, setHeatmapData] = useState<{ lat: number; lng: number; weight: number }[]>([]);
 
   // Load Google Maps JS API
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyAH6Ea8-iD481XUxKu4sBrUxY7L6BOicYI', // <-- put your key here
+    googleMapsApiKey: 'AIzaSyAH6Ea8-iD481XUxKu4sBrUxY7L6BOicYI',
     libraries: ['visualization'],
   });
+
+  useEffect(() => {
+    fetch('http://localhost:3001/get-heatmap', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch heatmap'))
+      .then(data => setHeatmapData(data))
+      .catch(() => setHeatmapData([]));
+  }, []);
 
   useEffect(() => {
     const updateDateTime = () => {
@@ -93,20 +100,22 @@ export default function AirQualityPage() {
                 center={{ lat: -7.7828, lng: 110.3671 }}
                 zoom={12}
                 options={{
-                  styles: [], // You can add custom map styles here
+                  styles: [],
                   disableDefaultUI: false,
                 }}
               >
-                <HeatmapLayerF
-                  data={heatmapData.map(p => ({
-                    location: new window.google.maps.LatLng(p.lat, p.lng),
-                    weight: p.weight,
-                  }))}
-                  options={{
-                    radius: 40,
-                    opacity: 0.7,
-                  }}
-                />
+                {heatmapData.length > 0 && (
+                  <HeatmapLayerF
+                    data={heatmapData.map(p => ({
+                      location: new window.google.maps.LatLng(p.lat, p.lng),
+                      weight: p.weight,
+                    }))}
+                    options={{
+                      radius: 40,
+                      opacity: 0.7,
+                    }}
+                  />
+                )}
               </GoogleMap>
             )}
           </div>

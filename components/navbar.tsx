@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
     <nav
       className="p-4 flex flex-col items-stretch relative"
       style={{
-        background: 'linear-gradient(90deg, #1E3A8A 0%, #22C55E 100%)'
+        background: '#0A3890'
       }}
     >
       {/* Top Row: Logo, Title, Right Icons */}

@@ -11,8 +11,10 @@ const Map = dynamic(() => import('@/components/readonlymap'), { ssr: false });
 export default function DailyReportPage() {
   const [dailyMessage, setDailyMessage] = useState('Loading your daily message...');
 
-  useEffect(() => {
-    fetch('http://127.0.0.1:3001/gemini-explanation')
+useEffect(() => {
+    fetch('http://localhost:3001/gemini-explanation', {
+      credentials: 'include',
+    })
       .then(res => res.ok ? res.text() : Promise.reject('Failed to fetch'))
       .then(text => setDailyMessage(text))
       .catch(() => setDailyMessage('Could not load your daily message.'));
