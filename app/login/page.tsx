@@ -5,6 +5,26 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { initializeApp, getApps } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBJm2mG6WU2ItwKf2lQDP286QojYnPh50Q",
+  authDomain: "adams-db415.firebaseapp.com",
+  projectId: "adams-db415",
+  storageBucket: "adams-db415.firebasestorage.app",
+  messagingSenderId: "117026430120",
+  appId: "1:117026430120:web:875a4e9078683e37d0769d",
+  measurementId: "G-1ZGBXZ1DEK"
+};
+
+// Initialize Firebase only once
+let app;
+if (!getApps().length) {
+  app = initializeApp(firebaseConfig);
+} else {
+  app = getApps()[0];
+}
+
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,13 +32,12 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const provider = new GoogleAuthProvider();
-  const auth = getAuth();
-  
+  const auth = getAuth(app);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    // Basic validation
     if (!email || !password) {
       setError('All fields are required');
       return;
@@ -32,6 +51,7 @@ const LoginPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
@@ -41,7 +61,6 @@ const LoginPage = () => {
         throw new Error(data.message || 'Login failed');
       }
 
-      // Redirect to dashboard after successful login
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Login failed. Please try again.');
@@ -49,36 +68,48 @@ const LoginPage = () => {
       setIsLoading(false);
     }
   };
+
+  // Only the function is changed, not the button or design
   const googleSignIn = async () => {
-    var token, user, email, uid;
-    try{
-      var result = await signInWithPopup(auth, provider);
-      const credential = GoogleAuthProvider.credentialFromResult(result); 
-      if(!credential){
+    setIsLoading(true);
+    setError('');
+    let token, user, email, uid;
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      if (!credential) {
         throw new Error('No credential found');
-      }   
+      }
       token = credential.accessToken;
       user = result.user;
       email = user.email;
       uid = user.uid;
-    } catch(error:any){
-      console.error(`error code = ${error.code} error = ${error.message}`);
-      setError('Google Sign-In failed. Please try again.');
+    } catch (error: any) {
+      if (error.code === "auth/cancelled-popup-request") {
+        setError("Google Sign-In popup was cancelled. Please try again.");
+      } else {
+        setError('Google Sign-In failed. Please try again.');
+      }
+      setIsLoading(false);
+      return;
     }
 
-    try{
-      const response = await fetch('http://127.0.0.1:3001/google-signin', {
+    try {
+      await fetch('http://127.0.0.1:3001/google-signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({token, email, uid}),
-      })
-    } catch(error:any){
-      console.error(`error code = ${error.code} error = ${error.message}`);
+        credentials: 'include',
+        body: JSON.stringify({ token, email, uid }),
+      });
+      router.push('/dashboard');
+    } catch (error: any) {
       setError('Google Sign-In failed. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-  }
+  };
 
   const isFormValid = email && password;
 

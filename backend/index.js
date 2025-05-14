@@ -29,7 +29,7 @@ let app = express();
 let controller = new Controller(db);
 app.use(
   cors({
-    origin: '*',
+    origin: 'http://localhost:3000',
     credentials: true,
   })
 );
