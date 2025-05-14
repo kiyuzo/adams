@@ -1,10 +1,7 @@
 import { NeonQueryFunction } from "@neondatabase/serverless";
 import { NeonHttpDatabase } from "drizzle-orm/neon-http";
 import { scannerDataTable, pollutionExposureTable, DataInterpretationTable, MissionTable, UserMissionTable} from '../../db/schema.js'
-import { NeonDbError } from "@neondatabase/serverless";
-import { sql, and, eq, InferModel } from "drizzle-orm";
-import { timestamp } from "drizzle-orm/gel-core";
-import { GoogleGenAI } from "@google/genai";
+import { sql, and, eq, or, isNull } from "drizzle-orm";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from "firebase/auth";
 import { initializeApp } from "firebase/app";
 
@@ -176,7 +173,10 @@ export class Repository{
                     .where(
                         and(
                             eq(MissionTable.isDeleted, false),
-                            eq(UserMissionTable.user_id, user_id)
+                            or(
+                                eq(UserMissionTable.user_id, user_id),
+                                isNull(UserMissionTable.user_id)
+                            )
                         )
                     );
         } catch (error){

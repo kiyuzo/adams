@@ -175,6 +175,9 @@ export class Controller {
                 });
             }
         });
+        this.postLogout = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            req.session.user_id = null;
+        });
         this.service = new Service(db);
     }
 }

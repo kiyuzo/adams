@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { scannerDataTable, pollutionExposureTable, DataInterpretationTable, MissionTable, UserMissionTable } from '../../db/schema.js';
-import { sql, and, eq } from "drizzle-orm";
+import { sql, and, eq, or, isNull } from "drizzle-orm";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -145,7 +145,7 @@ export class Repository {
                 })
                     .from(MissionTable)
                     .leftJoin(UserMissionTable, eq(UserMissionTable.mission_id, MissionTable.mission_id))
-                    .where(and(eq(MissionTable.isDeleted, false), eq(UserMissionTable.user_id, user_id)));
+                    .where(and(eq(MissionTable.isDeleted, false), or(eq(UserMissionTable.user_id, user_id), isNull(UserMissionTable.user_id))));
             }
             catch (error) {
                 console.error(error);

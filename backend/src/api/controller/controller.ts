@@ -174,4 +174,7 @@ export class Controller {
       });
     }
   }
+  postLogout = async (req: Request, res: Response) => {
+    req.session.user_id = null;
+  }
 }
