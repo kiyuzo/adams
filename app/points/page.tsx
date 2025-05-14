@@ -29,20 +29,19 @@ export default function PointsPage() {
     return 'bg-yellow-400';
   };
 
-  // Fetch missions from backend
+  // Fetch missions from backend (fixed to /mission)
   useEffect(() => {
     setMissionsLoading(true);
-    fetch('http://127.0.0.1:3001/missions')
+    fetch('http://127.0.0.1:3001/mission')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch missions');
         return res.json();
       })
       .then(data => {
-        // Expecting backend to return { completed: [...], uncompleted: [...] }
-        setMissions({
-          completed: data.completed || [],
-          uncompleted: data.uncompleted || [],
-        });
+        // If backend returns a flat array, split into completed/uncompleted
+        const completed = Array.isArray(data) ? data.filter((m: any) => m.progress === 100) : (data.completed || []);
+        const uncompleted = Array.isArray(data) ? data.filter((m: any) => m.progress < 100) : (data.uncompleted || []);
+        setMissions({ completed, uncompleted });
         setMissionsError('');
       })
       .catch(() => {
