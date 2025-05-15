@@ -4,16 +4,20 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AuthGuard from '@/components/AuthGuard';
 
+type PermissionName = 'Data Privacy' | 'Location' | 'Notifications';
+
+const initialPermissions: Record<PermissionName, boolean> = {
+  'Data Privacy': false,
+  'Location': false,
+  'Notifications': false,
+};
+
 const PermissionsPage = () => {
-  const [checkedItems, setCheckedItems] = useState({
-    'Data Privacy': false,
-    'Location': false,
-    'Notifications': false
-  });
+  const [checkedItems, setCheckedItems] = useState<Record<PermissionName, boolean>>(initialPermissions);
 
   const router = useRouter();
 
-  const handleCheckboxChange = (name: string) => {
+  const handleCheckboxChange = (name: PermissionName) => {
     setCheckedItems(prev => ({
       ...prev,
       [name]: !prev[name]
@@ -35,13 +39,13 @@ const PermissionsPage = () => {
 
         <form onSubmit={handleSubmit} className="w-full max-w-xs space-y-6">
           <div className="space-y-4">
-            {Object.entries(checkedItems).map(([name]) => (
+            {Object.entries(checkedItems).map(([name, checked]) => (
               <div key={name} className="flex items-center">
                 <input
                   type="checkbox"
                   id={name}
-                  checked={checkedItems[name]}
-                  onChange={() => handleCheckboxChange(name)}
+                  checked={checked}
+                  onChange={() => handleCheckboxChange(name as PermissionName)}
                   className="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
                 <label htmlFor={name} className="ml-3 block">
