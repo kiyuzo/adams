@@ -71,7 +71,7 @@ export default function PointsPage() {
         {/* Points value */}
         <div className="flex justify-center mb-8">
           <div className="flex flex-col items-center">
-            <span className="text-4xl font-bold text-white leading-none">82</span>
+            <span className="text-4xl font-bold text-white leading-none">129</span>
             <span className="text-lg text-white leading-none">pts</span>
           </div>
         </div>
@@ -137,15 +137,32 @@ export default function PointsPage() {
                       <h2 className="text-2xl font-semibold mb-4 text-white">Uncompleted Missions</h2>
                       <ul className="space-y-4 list-none">
                         {missions.uncompleted.map((mission, index) => (
-                          <li key={`uncompleted-${index}`} className="flex items-center bg-[#D9D9D9] rounded-lg p-4 shadow-sm">
-                            <div
-                              className={`w-4 h-4 rounded-full mr-4 ${getProgressClass(mission.progress)}`}
-                              title={`Progress: ${mission.progress}%`}
-                            ></div>
-                            <div className="flex justify-between items-center w-full">
-                              <p className="text-lg text-black">{mission.title}</p>
-                              <span className="font-medium text-black">{mission.points} pts</span>
+                          <li key={`uncompleted-${index}`} className="flex flex-col bg-[#D9D9D9] rounded-lg p-4 shadow-sm">
+                            <div className="flex items-center mb-2">
+                              <div
+                                className={`w-4 h-4 rounded-full mr-4 ${getProgressClass(mission.progress)}`}
+                                title={`Progress: ${mission.progress}%`}
+                              ></div>
+                              <div className="flex justify-between items-center w-full">
+                                <p className="text-lg text-black">{mission.title}</p>
+                                <span className="font-medium text-black">{mission.points} pts</span>
+                              </div>
                             </div>
+                            {/* Progress bar only for missions that are in progress (not 0, not 100) */}
+                            {mission.progress > 0 && mission.progress < 100 && (
+                              <div className="w-full h-2 bg-gray-300 rounded">
+                                <div
+                                  className="h-2 rounded"
+                                  style={{
+                                    width: `${mission.progress}%`,
+                                    background:
+                                      mission.progress < 100
+                                        ? '#F4EA03' // yellow for in progress
+                                        : '#23CA58', // green if completed (shouldn't show here)
+                                  }}
+                                ></div>
+                              </div>
+                            )}
                           </li>
                         ))}
                       </ul>

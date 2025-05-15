@@ -10,14 +10,25 @@ const Map = dynamic(() => import('@/components/readonlymap'), { ssr: false });
 
 export default function DailyReportPage() {
   const [dailyMessage, setDailyMessage] = useState('Loading your daily message...');
+  const [pollutionPoints, setPollutionPoints] = useState<{ x_coor: number, y_coor: number, pollution: number }[]>([]);
 
-useEffect(() => {
+  useEffect(() => {
     fetch('http://localhost:3001/gemini-explanation', {
       credentials: 'include',
     })
       .then(res => res.ok ? res.text() : Promise.reject('Failed to fetch'))
       .then(text => setDailyMessage(text))
       .catch(() => setDailyMessage('Could not load your daily message.'));
+  }, []);
+
+  // Fetch pollution exposure points
+  useEffect(() => {
+    fetch('http://localhost:3001/pollution-exposure', {
+      credentials: 'include',
+    })
+      .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch pollution exposure'))
+      .then(data => setPollutionPoints(data))
+      .catch(() => setPollutionPoints([]));
   }, []);
 
   const getEnglishDateIndonesia = () => {
@@ -67,7 +78,7 @@ useEffect(() => {
             <div>
               <div className="flex flex-col mb-6">
                 <span className="text-4xl font-bold text-[#FB4706]">
-                  112<span className="text-xl text-white">pts</span>
+                  129<span className="text-xl text-white">pts</span>
                 </span>
               </div>
               <div className="flex flex-col items-start">
@@ -137,7 +148,7 @@ useEffect(() => {
           
           {/* Interactive Map */}
           <div className="bg-[#14181D] h-48 rounded-lg mb-3 flex items-center justify-center">
-            <Map center={mainPoint} />
+            <Map center={mainPoint} pollutionPoints={pollutionPoints} />
           </div>
           
           {/* Location text */}

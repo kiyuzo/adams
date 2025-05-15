@@ -15,58 +15,80 @@ export default function AirQualityPage() {
   const router = useRouter();
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [heatmapData, setHeatmapData] = useState<{ lat: number; lng: number; weight: number }[]>([]);
+  const [heatmapData, setHeatmapData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   // Load Google Maps JS API
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyAH6Ea8-iD481XUxKu4sBrUxY7L6BOicYI',
+    googleMapsApiKey: 'AIzaSyAH6Ea8-iD481XUxKu4sBrUxY7L6BOicYI', // Replace with your actual API key
     libraries: ['visualization'],
   });
 
-  useEffect(() => {
-    fetch('http://localhost:3001/get-heatmap', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-    })
-      .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch heatmap'))
-      .then(data => setHeatmapData(data))
-      .catch(() => setHeatmapData([]));
-  }, []);
+useEffect(() => {
+  // Fetch heatmap data from your backend
+  const fetchHeatmapData = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/get-heatmap', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include'
+      });
 
-  useEffect(() => {
-    const updateDateTime = () => {
-      const now = new Date();
-      const day = now.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'Asia/Jakarta' });
-      const dayNum = now.getDate();
-      const daySuffix =
-        dayNum % 10 === 1 && dayNum !== 11
-          ? 'st'
-          : dayNum % 10 === 2 && dayNum !== 12
-          ? 'nd'
-          : dayNum % 10 === 3 && dayNum !== 13
-          ? 'rd'
-          : 'th';
-      const month = now.toLocaleDateString('en-US', { month: 'long', timeZone: 'Asia/Jakarta' });
-      const year = now.getFullYear();
-      setDate(`${day}, ${dayNum}${daySuffix} ${month} ${year}`);
-      setTime(
-        now
-          .toLocaleTimeString('en-US', {
-            hour12: false,
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            timeZone: 'Asia/Jakarta',
-          })
-      );
-    };
-    updateDateTime();
-    const interval = setInterval(updateDateTime, 1000);
-    return () => clearInterval(interval);
-  }, []);
+      if (!response.ok) {
+        throw new Error('Failed to fetch heatmap data');
+      }
+
+      const data = await response.json();
+      // Adapt the structure: { pollution, coordinate: [lat, lng] }
+      const formattedData = data.map((item: any) => ({
+        lat: item.coordinate[0],
+        lng: item.coordinate[1],
+        weight: item.pollution
+      }));
+      setHeatmapData(formattedData);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchHeatmapData();
+
+  // Date/time updater
+  const updateDateTime = () => {
+    const now = new Date();
+    const day = now.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'Asia/Jakarta' });
+    const dayNum = now.getDate();
+    const daySuffix =
+      dayNum % 10 === 1 && dayNum !== 11
+        ? 'st'
+        : dayNum % 10 === 2 && dayNum !== 12
+        ? 'nd'
+        : dayNum % 10 === 3 && dayNum !== 13
+        ? 'rd'
+        : 'th';
+    const month = now.toLocaleDateString('en-US', { month: 'long', timeZone: 'Asia/Jakarta' });
+    const year = now.getFullYear();
+    setDate(`${day}, ${dayNum}${daySuffix} ${month} ${year}`);
+    setTime(
+      now
+        .toLocaleTimeString('en-US', {
+          hour12: false,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          timeZone: 'Asia/Jakarta',
+        })
+    );
+  };
+  updateDateTime();
+  const interval = setInterval(updateDateTime, 1000);
+  return () => clearInterval(interval);
+}, []);
 
   return (
     <AuthGuard>
@@ -91,35 +113,52 @@ export default function AirQualityPage() {
           </div>
         </div>
 
+        {/* Loading and error states */}
+        {loading && (
+          <div className="flex-1 flex items-center justify-center">
+            <p>Loading heatmap data...</p>
+          </div>
+        )}
+        {error && (
+          <div className="flex-1 flex items-center justify-center text-red-500">
+            <p>Error: {error}</p>
+          </div>
+        )}
+
         {/* Google Maps Heatmap */}
-        <div className="rounded-lg flex-1 w-full flex items-center justify-center overflow-hidden p-0 m-0" style={{ minHeight: 0 }}>
-          <div style={mapContainerStyle}>
-            {isLoaded && (
-              <GoogleMap
-                mapContainerStyle={mapContainerStyle}
-                center={{ lat: -7.7828, lng: 110.3671 }}
-                zoom={12}
-                options={{
-                  styles: [],
-                  disableDefaultUI: false,
-                }}
-              >
-                {heatmapData.length > 0 && (
+        {!loading && !error && (
+          <div className="rounded-lg flex-1 w-full flex items-center justify-center overflow-hidden p-0 m-0" style={{ minHeight: 0 }}>
+            <div style={mapContainerStyle}>
+              {isLoaded && heatmapData.length > 0 && (
+                <GoogleMap
+                  mapContainerStyle={mapContainerStyle}
+                  center={{ lat: -7.7828, lng: 110.3671 }} // Default center for Sleman
+                  zoom={12}
+                  options={{
+                    styles: [], 
+                    disableDefaultUI: false,
+                  }}
+                >
                   <HeatmapLayerF
                     data={heatmapData.map(p => ({
                       location: new window.google.maps.LatLng(p.lat, p.lng),
                       weight: p.weight,
                     }))}
                     options={{
-                      radius: 40,
-                      opacity: 0.7,
+                      radius: 1,
+                      opacity: 0.5,
+                      gradient: [
+                        'rgba(0, 255, 0, 0)',      // Green (good)
+                        'rgba(255, 255, 0, 0.6)',   // Yellow (moderate)
+                        'rgba(255, 0, 0, 0.8)'      // Red (poor)
+                      ]
                     }}
                   />
-                )}
-              </GoogleMap>
-            )}
+                </GoogleMap>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </AuthGuard>
   );
