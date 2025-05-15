@@ -79,7 +79,7 @@ export class Repository {
             }
             return;
         });
-        this.GetExposureDataByID = (user) => __awaiter(this, void 0, void 0, function* () {
+        this.getExposureDataByID = (user) => __awaiter(this, void 0, void 0, function* () {
             try {
                 return yield this.db.select({
                     timestamp: pollutionExposureTable.timestamp,
@@ -94,7 +94,7 @@ export class Repository {
                 throw new Error("An error occured during database call.");
             }
         });
-        this.GetScannerData = () => __awaiter(this, void 0, void 0, function* () {
+        this.getScannerData = () => __awaiter(this, void 0, void 0, function* () {
             try {
                 return yield this.db.select({
                     location: scannerDataTable.coordinate,
@@ -201,6 +201,22 @@ export class Repository {
                     coordinate: [x_coor, y_coor],
                     pollution: pollution
                 });
+            }
+            catch (error) {
+                console.error(error);
+                throw error;
+            }
+        });
+        this.getPreviousExposureData = (user_id) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.db
+                    .select({
+                    timestamp: pollutionExposureTable.timestamp,
+                    pollution: pollutionExposureTable.pollution,
+                    coordinate: pollutionExposureTable.coordinate
+                })
+                    .from(pollutionExposureTable)
+                    .where(and(eq(pollutionExposureTable.user_id, user_id), sql `${pollutionExposureTable.timestamp} < NOW() - INTERVAL '1 DAY'`));
             }
             catch (error) {
                 console.error(error);

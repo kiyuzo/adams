@@ -99,7 +99,7 @@ export class Repository{
         }
         return;    
     }
-    GetExposureDataByID = async (user:string)=>{
+    getExposureDataByID = async (user:string)=>{
         try{
             return await this.db.select({
                 timestamp: pollutionExposureTable.timestamp,
@@ -120,7 +120,7 @@ export class Repository{
                 throw new Error("An error occured during database call."); 
                 }
         }
-    GetScannerData = async ()=>{
+    getScannerData = async ()=>{
         try{
             return await this.db.select({
                 location: scannerDataTable.coordinate,
@@ -233,6 +233,26 @@ export class Repository{
                 coordinate: [x_coor, y_coor],
                 pollution: pollution
             })
+        } catch(error){
+            console.error(error)
+            throw error;
+        }
+    }
+    getPreviousExposureData = async (user_id:string)=>{
+        try{
+            return await this.db
+            .select({
+                timestamp: pollutionExposureTable.timestamp,
+                pollution: pollutionExposureTable.pollution,
+                coordinate: pollutionExposureTable.coordinate
+            })
+            .from(pollutionExposureTable)
+            .where(
+                and(
+                    eq(pollutionExposureTable.user_id, user_id),
+                    sql`${pollutionExposureTable.timestamp} < NOW() - INTERVAL '1 DAY'`
+                )
+            );
         } catch(error){
             console.error(error)
             throw error;

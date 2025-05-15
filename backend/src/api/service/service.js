@@ -63,11 +63,15 @@ export class Service {
             yield this.repo.postPollutionExposureTable(user_id, x_coor, y_coor, pollution);
         });
         this.getExposureDataById = (user_id) => __awaiter(this, void 0, void 0, function* () {
-            const data = yield this.repo.GetExposureDataByID(user_id);
+            const data = yield this.repo.getExposureDataByID(user_id);
+            return data;
+        });
+        this.getPreviousExposureData = (user_id) => __awaiter(this, void 0, void 0, function* () {
+            const data = yield this.repo.getPreviousExposureData(user_id);
             return data;
         });
         this.getExposureDataAndCoorById = (user_id) => __awaiter(this, void 0, void 0, function* () {
-            const data = yield this.repo.GetExposureDataByID(user_id);
+            const data = yield this.repo.getExposureDataByID(user_id);
             return data;
         });
         this.getMission = (user_id) => __awaiter(this, void 0, void 0, function* () {
@@ -101,7 +105,7 @@ export class Service {
     }
     getScannerData() {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.repo.GetScannerData();
+            return this.repo.getScannerData();
         });
     }
 }

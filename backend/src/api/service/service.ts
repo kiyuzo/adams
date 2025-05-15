@@ -23,7 +23,7 @@ export class Service {
     await this.repo.postPollutionExposureTable(userId, x, y, pollution);
   }
   async getScannerData() {
-    return this.repo.GetScannerData();
+    return this.repo.getScannerData();
   }
   private calculateDistance = (location1: [number, number], location2: [number, number]): number => {
     return Math.sqrt((location1[0] - location2[0]) ** 2 + (location1[1] - location2[1]) ** 2)
@@ -82,11 +82,15 @@ calculateMap = async () => {
     await this.repo.postPollutionExposureTable(user_id, x_coor, y_coor, pollution);
   };
   getExposureDataById = async (user_id: string) => {
-    const data = await this.repo.GetExposureDataByID(user_id);
+    const data = await this.repo.getExposureDataByID(user_id);
     return data;
   };
+  getPreviousExposureData = async (user_id: string) => {
+    const data = await this.repo.getPreviousExposureData(user_id);
+    return data;
+  }
   getExposureDataAndCoorById = async (user_id: string) => {
-    const data = await this.repo.GetExposureDataByID(user_id);
+    const data = await this.repo.getExposureDataByID(user_id);
     return data;
   };
   getMission = async (user_id: string) => {

@@ -125,10 +125,11 @@ export class Controller {
     }
     try{
       var exposure_data = JSON.stringify(await this.service.getExposureDataById(user_id));
+      var prev_exposure_data = JSON.stringify(await this.service.getPreviousExposureData(user_id));
         var response = await ai.models.generateContent({
           model: "gemini-2.0-flash",
-          contents: `Analyze the provided ${exposure_data.toString()} (containing driving duration, distance, and pollution exposure percentages) and generate a concise, friendly summary of the driver's air quality exposure. Your response should:
-
+          contents: `Analyze the provided ${exposure_data.toString()}. and generate a concise, friendly summary of the driver's air quality exposure. Your response should:
+Also, make comparison to previous data if available: ${prev_exposure_data.toString()}.
 Interpret the Data:
 
 Calculate total drive time and distance.
@@ -159,12 +160,13 @@ No chatbot phrases—output the summary directly.
 
 Max 4-5 sentences.
 
-Do not give the user any hint that this is AI or chatbot generated. So, do not say things such as "ok, here is.."
+Do not give the user any hint that this is AI or chatbot generated. So, do not say things such as "ok, here is..".
+If the data is empty, do not tell the user about it and just give a generic message.
 Example Output:
-"You drove 30 miles (50 mins), with 60% in clean air—well done! The 25% in red zones (up 5% from last week) may cause mild throat irritation. Try using [Road X] to cut pollution exposure.`,
+"You drove 30 kilometers (50 mins), with 60% in clean air—well done! The 25% in red zones (up 5% from last week) may cause mild throat irritation. Try using [Road X] to cut pollution exposure.`,
           config: {
             maxOutputTokens:500,
-            temperature: 0.2,
+            temperature: 0.05,
           },
         });
       
