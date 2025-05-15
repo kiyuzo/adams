@@ -59,8 +59,12 @@ const SignUpPage = () => {
 
       router.push('/synchronize');
 
-    } catch (err: any) {
-      setError(err.message || 'Registration failed. Please try again.');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message || 'Registration failed. Please try again.');
+      } else {
+        setError('Registration failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
