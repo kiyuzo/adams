@@ -29,7 +29,7 @@ let app = express();
 let controller = new Controller(db);
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: 'https://project-adams.vercel.app/',
     credentials: true,
   })
 );
@@ -42,7 +42,7 @@ app.use(session({
   cookie: { 
     secure: false,       // Allow HTTP in dev
     sameSite: 'lax',     // Use 'none' if using HTTPS
-    domain: 'localhost', // 👈 Critical for cross-port cookies
+    domain: 'https://project-adams.vercel.app/', // 👈 Critical for cross-port cookies
     maxAge: 24 * 60 * 60 * 1000 // Optional: set expiry
   }
 }));
