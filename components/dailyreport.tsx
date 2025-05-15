@@ -8,7 +8,7 @@ const Map = dynamic(() => import('./readonlymap'), { ssr: false });
 
 export default function DailyReport() {
   const router = useRouter();
-  const [mainPoint, setMainPoint] = useState<[number, number]>([-7.7828, 110.3671]); // Yogyakarta
+  const [mainPoint] = useState<[number, number]>([-7.7828, 110.3671]); // Yogyakarta
   const [dailyMessage, setDailyMessage] = useState('Loading your daily message...');
 
 useEffect(() => {

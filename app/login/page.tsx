@@ -80,7 +80,7 @@ const LoginPage = () => {
   const googleSignIn = async () => {
     setIsLoading(true);
     setErrorMsg('');
-    let token: string | undefined, user: any, email: string | null | undefined, uid: string | undefined;
+    let token: string | undefined, user: import("firebase/auth").User, email: string | null | undefined, uid: string | undefined;
     try {
       const result: UserCredential = await signInWithPopup(auth, provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
