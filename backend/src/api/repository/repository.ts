@@ -224,4 +224,18 @@ export class Repository{
             throw error;
         }
     }
+    postRecordJourney = async (user_id:string, x_coor:number, y_coor:number, pollution:number)=>{
+        try{
+            await this.db
+            .insert(pollutionExposureTable)
+            .values({
+                user_id: user_id,
+                coordinate: [x_coor, y_coor],
+                pollution: pollution
+            })
+        } catch(error){
+            console.error(error)
+            throw error;
+        }
+    }
 }

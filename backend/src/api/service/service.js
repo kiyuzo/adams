@@ -82,6 +82,11 @@ export class Service {
         this.postUserMissionProgress = (user_id, mission_id, quantity) => __awaiter(this, void 0, void 0, function* () {
             yield this.repo.postUserMissionProgress(user_id, mission_id, quantity);
         });
+        this.postRecordJourney = (user_id, x_coor, y_coor) => __awaiter(this, void 0, void 0, function* () {
+            let data = yield this.getScannerData();
+            let pollution = this.IDWInterpolation([x_coor, y_coor], data);
+            yield this.repo.postRecordJourney(user_id, x_coor, y_coor, pollution);
+        });
         this.repo = new Repository(db);
     }
     recordScannerData(pollution, x, y) {
