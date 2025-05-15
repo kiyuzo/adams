@@ -192,6 +192,21 @@ export class Repository {
                 throw error;
             }
         });
+        this.postRecordJourney = (user_id, x_coor, y_coor, pollution) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                yield this.db
+                    .insert(pollutionExposureTable)
+                    .values({
+                    user_id: user_id,
+                    coordinate: [x_coor, y_coor],
+                    pollution: pollution
+                });
+            }
+            catch (error) {
+                console.error(error);
+                throw error;
+            }
+        });
         this.db = db;
     }
 }

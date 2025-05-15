@@ -101,4 +101,9 @@ calculateMap = async () => {
   postUserMissionProgress = async (user_id: string, mission_id: number, quantity: number) => {
     await this.repo.postUserMissionProgress(user_id, mission_id, quantity);
   }
+  postRecordJourney = async (user_id: string, x_coor: number, y_coor: number) => {
+    let data = await this.getScannerData();
+    let pollution = this.IDWInterpolation([x_coor, y_coor], data);
+    await this.repo.postRecordJourney(user_id, x_coor, y_coor, pollution);
+  }
 }

@@ -51,7 +51,7 @@ app.use(session({
 app.post('/register', controller.postRegister);
 app.post('/login', controller.postLogin);
 app.post('/scanner-data', controller.postScannerData);
-app.post('/pollution-exposure', controller.postPollutionExposure);
+app.post('/record-journey', controller.postRecordJourney);
 app.get('/scanner-data', controller.getScannerData);
 app.get('/pollution-exposure', controller.getExposureDataById)
 app.get('/get-heatmap', controller.calculateMap)
