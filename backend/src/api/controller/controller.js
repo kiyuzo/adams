@@ -169,7 +169,7 @@ Example Output:
 "You drove 30 kilometers (50 mins), with 60% in clean air—well done! The 25% in red zones (up 5% from last week) may cause mild throat irritation. Try using [Road X] to cut pollution exposure.`,
                     config: {
                         maxOutputTokens: 500,
-                        temperature: 0.05,
+                        temperature: 0.7,
                     },
                 });
             }
