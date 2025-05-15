@@ -2,13 +2,18 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useNavigation } from '@/context/NavigationContext';
 import AuthGuard from '@/components/AuthGuard';
 
+// Define a type for missions to avoid TypeScript errors
+type Mission = {
+  title: string;
+  points: number;
+  progress: number;
+};
+
 export default function PointsPage() {
-  const { activeTab } = useNavigation();
-  const [activeView, setActiveView] = useState('missions');
-  const [missions, setMissions] = useState<{ completed: any[]; uncompleted: any[] }>({ completed: [], uncompleted: [] });
+  const [activeView, setActiveView] = useState<'missions' | 'rewards'>('missions');
+  const [missions, setMissions] = useState<{ completed: Mission[]; uncompleted: Mission[] }>({ completed: [], uncompleted: [] });
   const [missionsLoading, setMissionsLoading] = useState(true);
   const [missionsError, setMissionsError] = useState('');
   const router = useRouter();
@@ -32,17 +37,18 @@ export default function PointsPage() {
   // Fetch missions from backend (fixed to /mission)
   useEffect(() => {
     setMissionsLoading(true);
-    fetch('http://localhost:3001/mission',
-      {method:'GET', credentials:'include'}
-    )
+    fetch('http://localhost:3001/mission', {
+      method: 'GET',
+      credentials: 'include',
+    })
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch missions');
         return res.json();
       })
       .then(data => {
         // If backend returns a flat array, split into completed/uncompleted
-        const completed = Array.isArray(data) ? data.filter((m: any) => m.progress === 100) : (data.completed || []);
-        const uncompleted = Array.isArray(data) ? data.filter((m: any) => m.progress < 100) : (data.uncompleted || []);
+        const completed = Array.isArray(data) ? data.filter((m: Mission) => m.progress === 100) : (data.completed || []);
+        const uncompleted = Array.isArray(data) ? data.filter((m: Mission) => m.progress < 100) : (data.uncompleted || []);
         setMissions({ completed, uncompleted });
         setMissionsError('');
       })
@@ -111,7 +117,7 @@ export default function PointsPage() {
               <>
                 {missions.completed.length === 0 && missions.uncompleted.length === 0 ? (
                   <div className="text-center text-gray-400 pt-8">
-                    You don't have any missions today.
+                    You don&apos;t have any missions today.
                   </div>
                 ) : (
                   <>
