@@ -78,7 +78,7 @@ export default function DailyReportPage() {
             <div>
               <div className="flex flex-col mb-6">
                 <span className="text-4xl font-bold text-[#FB4706]">
-                  112<span className="text-xl text-white">pts</span>
+                  129<span className="text-xl text-white">pts</span>
                 </span>
               </div>
               <div className="flex flex-col items-start">
