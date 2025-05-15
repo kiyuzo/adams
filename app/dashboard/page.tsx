@@ -1,13 +1,13 @@
 'use client';
 
-import { useNavigation } from '@/context/NavigationContext';
+//import { useNavigation } from '@/context/NavigationContext';
 import DailyReport from '@/components/dailyreport';
 import WeeklyReport from '@/components/weeklyreport';
 import Streak from '@/components/streak';
 import AuthGuard from '@/components/AuthGuard';
 
 export default function HomePage() {
-  const { activeTab } = useNavigation();
+  //const { activeTab } = useNavigation();
   
   return (
     <AuthGuard>

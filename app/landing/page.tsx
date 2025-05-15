@@ -29,7 +29,7 @@ const LandingPage = () => {
             <h2 className="text-6xl font-extrabold leading-tight">ADAMS</h2>
             <h3 className="text-5xl font-bold">PROJECT</h3>
           </div>
-          <p className="text-xl italic mb-12">"Riding towards a better future"</p>
+          <p className="text-xl italic mb-12">&quot;Riding towards a better future&quot;</p>
           <Link href="/login">
             <button className="bg-white text-blue-500 font-bold py-3 px-10 rounded-lg text-lg hover:bg-opacity-90 transition mb-20">
               Login
@@ -54,7 +54,7 @@ const LandingPage = () => {
           </div>
           {/* Description */}
           <div>
-            <h4 className="text-3xl font-bold mb-4">ADAM Let's you ...</h4>
+            <h4 className="text-3xl font-bold mb-4">ADAM Let&apos;s you ...</h4>
           </div>
         </div>
 

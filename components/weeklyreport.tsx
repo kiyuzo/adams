@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 export default function WeeklyReport() {
   const [loading, setLoading] = useState(true);
-  const [chartData, setChartData] = useState<number[]>([]);
+  const [chartData] = useState<number[]>([]);
   const chartTitle = "Air quality index";
   const yAxisLabel = "Working Hours";
   

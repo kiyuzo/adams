@@ -11,11 +11,18 @@ const mapContainerStyle = {
   borderRadius: '0.5rem',
 };
 
+// Define a type for heatmap data
+type HeatmapPoint = {
+  lat: number;
+  lng: number;
+  weight: number;
+};
+
 export default function AirQualityPage() {
   const router = useRouter();
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [heatmapData, setHeatmapData] = useState([]);
+  const [heatmapData, setHeatmapData] = useState<HeatmapPoint[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -25,70 +32,74 @@ export default function AirQualityPage() {
     libraries: ['visualization'],
   });
 
-useEffect(() => {
-  // Fetch heatmap data from your backend
-  const fetchHeatmapData = async () => {
-    try {
-      const response = await fetch('http://localhost:3001/get-heatmap', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include'
-      });
+  useEffect(() => {
+    // Fetch heatmap data from your backend
+    const fetchHeatmapData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/get-heatmap', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include'
+        });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch heatmap data');
+        if (!response.ok) {
+          throw new Error('Failed to fetch heatmap data');
+        }
+
+        const data: { pollution: number; coordinate: [number, number]; }[] = await response.json();
+        // Adapt the structure: { pollution, coordinate: [lat, lng] }
+        const formattedData: HeatmapPoint[] = data.map((item) => ({
+          lat: item.coordinate[0],
+          lng: item.coordinate[1],
+          weight: item.pollution
+        }));
+        setHeatmapData(formattedData);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Unknown error');
+        }
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const data = await response.json();
-      // Adapt the structure: { pollution, coordinate: [lat, lng] }
-      const formattedData = data.map((item: any) => ({
-        lat: item.coordinate[0],
-        lng: item.coordinate[1],
-        weight: item.pollution
-      }));
-      setHeatmapData(formattedData);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchHeatmapData();
 
-  fetchHeatmapData();
-
-  // Date/time updater
-  const updateDateTime = () => {
-    const now = new Date();
-    const day = now.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'Asia/Jakarta' });
-    const dayNum = now.getDate();
-    const daySuffix =
-      dayNum % 10 === 1 && dayNum !== 11
-        ? 'st'
-        : dayNum % 10 === 2 && dayNum !== 12
-        ? 'nd'
-        : dayNum % 10 === 3 && dayNum !== 13
-        ? 'rd'
-        : 'th';
-    const month = now.toLocaleDateString('en-US', { month: 'long', timeZone: 'Asia/Jakarta' });
-    const year = now.getFullYear();
-    setDate(`${day}, ${dayNum}${daySuffix} ${month} ${year}`);
-    setTime(
-      now
-        .toLocaleTimeString('en-US', {
-          hour12: false,
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          timeZone: 'Asia/Jakarta',
-        })
-    );
-  };
-  updateDateTime();
-  const interval = setInterval(updateDateTime, 1000);
-  return () => clearInterval(interval);
-}, []);
+    // Date/time updater
+    const updateDateTime = () => {
+      const now = new Date();
+      const day = now.toLocaleDateString('en-US', { weekday: 'long', timeZone: 'Asia/Jakarta' });
+      const dayNum = now.getDate();
+      const daySuffix =
+        dayNum % 10 === 1 && dayNum !== 11
+          ? 'st'
+          : dayNum % 10 === 2 && dayNum !== 12
+          ? 'nd'
+          : dayNum % 10 === 3 && dayNum !== 13
+          ? 'rd'
+          : 'th';
+      const month = now.toLocaleDateString('en-US', { month: 'long', timeZone: 'Asia/Jakarta' });
+      const year = now.getFullYear();
+      setDate(`${day}, ${dayNum}${daySuffix} ${month} ${year}`);
+      setTime(
+        now
+          .toLocaleTimeString('en-US', {
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZone: 'Asia/Jakarta',
+          })
+      );
+    };
+    updateDateTime();
+    const interval = setInterval(updateDateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <AuthGuard>

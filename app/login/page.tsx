@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { initializeApp, getApps } from "firebase/app";
+import { getAuth, signInWithPopup, GoogleAuthProvider, UserCredential } from "firebase/auth";
+import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBJm2mG6WU2ItwKf2lQDP286QojYnPh50Q",
@@ -18,7 +18,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase only once
-let app;
+let app: FirebaseApp;
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
 } else {
@@ -28,7 +28,7 @@ if (!getApps().length) {
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const provider = new GoogleAuthProvider();
@@ -36,10 +36,10 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setErrorMsg('');
 
     if (!email || !password) {
-      setError('All fields are required');
+      setErrorMsg('All fields are required');
       return;
     }
 
@@ -65,8 +65,12 @@ const LoginPage = () => {
       localStorage.setItem('isLoggedIn', 'true');
 
       router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message || 'Login failed. Please try again.');
+    } catch (err) {
+      if (err instanceof Error) {
+        setErrorMsg(err.message || 'Login failed. Please try again.');
+      } else {
+        setErrorMsg('Login failed. Please try again.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -75,10 +79,10 @@ const LoginPage = () => {
   // Only the function is changed, not the button or design
   const googleSignIn = async () => {
     setIsLoading(true);
-    setError('');
-    let token, user, email, uid;
+    setErrorMsg('');
+    let token: string | undefined, user: any, email: string | null | undefined, uid: string | undefined;
     try {
-      const result = await signInWithPopup(auth, provider);
+      const result: UserCredential = await signInWithPopup(auth, provider);
       const credential = GoogleAuthProvider.credentialFromResult(result);
       if (!credential) {
         throw new Error('No credential found');
@@ -87,11 +91,11 @@ const LoginPage = () => {
       user = result.user;
       email = user.email;
       uid = user.uid;
-    } catch (error: any) {
-      if (error.code === "auth/cancelled-popup-request") {
-        setError("Google Sign-In popup was cancelled. Please try again.");
+    } catch (err) {
+      if (typeof err === "object" && err && "code" in err && (err as { code?: string }).code === "auth/cancelled-popup-request") {
+        setErrorMsg("Google Sign-In popup was cancelled. Please try again.");
       } else {
-        setError('Google Sign-In failed. Please try again.');
+        setErrorMsg('Google Sign-In failed. Please try again.');
       }
       setIsLoading(false);
       return;
@@ -107,8 +111,8 @@ const LoginPage = () => {
         body: JSON.stringify({ token, email, uid }),
       });
       router.push('/dashboard');
-    } catch (error: any) {
-      setError('Google Sign-In failed. Please try again.');
+    } catch {
+      setErrorMsg('Google Sign-In failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -132,9 +136,9 @@ const LoginPage = () => {
       <h1 className="text-3xl font-bold text-center mb-8">Log in</h1>
       
       <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-sm">
-        {error && (
+        {errorMsg && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-            {error}
+            {errorMsg}
           </div>
         )}
         

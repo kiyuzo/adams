@@ -17,9 +17,11 @@ const merchants = [
 ];
 
 export default function PointsRedeemPage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedMerchant, setSelectedMerchant] = useState<number | null>(null);
-  const [showConfirmation, setShowConfirmation] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedMerchantName, setSelectedMerchantName] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [animateOut, setAnimateOut] = useState(false);
   const router = useRouter();
 
