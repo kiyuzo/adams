@@ -46,7 +46,7 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/login', {
+      const response = await fetch('http://project-adams.vercel.app/3001/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ const LoginPage = () => {
     }
 
     try {
-      await fetch('http://localhost:3001/google-signin', {
+      await fetch('http://project-adams.vercel.app/3001/google-signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
