@@ -36,7 +36,7 @@ export default function AirQualityPage() {
     // Fetch heatmap data from your backend
     const fetchHeatmapData = async () => {
       try {
-        const response = await fetch('http://localhost:3001/get-heatmap', {
+        const response = await fetch('https://adam-be1-c555c3bbd0a6.herokuapp.com/get-heatmap', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
