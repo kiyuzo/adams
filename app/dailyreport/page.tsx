@@ -13,7 +13,7 @@ export default function DailyReportPage() {
   const [pollutionPoints, setPollutionPoints] = useState<{ x_coor: number, y_coor: number, pollution: number }[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/gemini-explanation', {
+    fetch('https://adam-be1-c555c3bbd0a6.herokuapp.com/gemini-explanation', {
       credentials: 'include',
     })
       .then(res => res.ok ? res.text() : Promise.reject('Failed to fetch'))
@@ -23,7 +23,7 @@ export default function DailyReportPage() {
 
   // Fetch pollution exposure points
   useEffect(() => {
-    fetch('http://localhost:3001/pollution-exposure', {
+    fetch('https://adam-be1-c555c3bbd0a6.herokuapp.com/pollution-exposure', {
       credentials: 'include',
     })
       .then(res => res.ok ? res.json() : Promise.reject('Failed to fetch pollution exposure'))

@@ -37,7 +37,7 @@ export default function PointsPage() {
   // Fetch missions from backend (fixed to /mission)
   useEffect(() => {
     setMissionsLoading(true);
-    fetch('http://localhost:3001/mission', {
+    fetch('https://adam-be1-c555c3bbd0a6.herokuapp.com/mission', {
       method: 'GET',
       credentials: 'include',
     })
